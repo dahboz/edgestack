@@ -1,6 +1,8 @@
-export function footer() {
+export function Footer() {
+    const year = new Date ().getFullYear()
+     
     return (
-        <footer className="bg-white px shadow-md">
+        <footer className="bg-white px-5 py-5 block inset-shadow-sm md:flex md:justify-between">
             <div className="flex gap-2 text-gray-600">
                 <p>&copy; {year} Edgestack system</p>
                 <p>All rights reserved</p>

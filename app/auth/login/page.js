@@ -1,51 +1,57 @@
-      "use client"
-import { Button, TextField } from "@mui/material";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { TextField, textField} from "@mui/material"
 import { FcGoogle } from "react-icons/fc";
-TextField
+import { FaGithub } from "react-icons/fa";
+import { auth, signIn } from "@/auth";
 
-export default function login(){
-    const [count, setCount] = useState(0);
-    const [data,setData] = useState ([]);
+export default async function Login() {
+    const session = await auth ();
+    console.log(session);
 
-      useEffect(()=>{
-        const fetchData = async ()=>{
-            const response = await fetch("https://dummyjson.com/products");
-            const  data = await response.json();
-            console.log(data.products);
-            setData(data.products)
-         }
-         fetchData();
-      },[])
 
-    return(
-        <mian>
-            <div className="flex flex-col gap-2 justify-center items-center">
-                <p className="text-2xl font-bold"> {count} </p>
-                <button onClick={()=>{setCount(count + 1)}} className="w-20 h-16 bg-blue-300 rounded">Increment</button>
-                <button onClick={()=>{setCount(count - 1)}} className="w-20 h-16 bg-blue-300 rounded">Decrement</button>
-                <Button variant="contained">sign in</Button>
-                <FcGoogle className="text-4xl "/>
-                <TextField/>
-            </div>
-            <div className="m-10 grid grid-cols-4">
-                {data.map(data =>
-                <div key={data.id} className="w-70 h-120 rounded-md shadow-md">
-                    <Image
-                    src="/blg.jpg" 
-                    alt="product"
-                    width={200}
-                    height={200}
-                    />
-                    <h1>{data.title}</h1>
-                    <p>{data.price}</p>
-                    <p>{data.description}</p>
+    return (
+        <main className="min-h-screen flex justify-center py-6 px-2">
+        <div className="w-full shadow-md rounded md:w-94 md:flex md:flex-col md:gap-3
+        max-h-120 md:px-3 md:py-4">
+            <h1 className="text-2xl font-bold text-center">Sign Into Exam Portal</h1>
+            <p className="text-sm text-gray-500 mt-2 text-center">create an account or  chsign in</p>
+            <form className=" flex flex-col gap-3">
+                <div>
+                   <TextField
+                     fullWidth
+                     size="small"
+                     label="Email"
+                     type="email"
+                     placeholder="dabere@gmail.com"
+                     id="email"
+                   />
                 </div>
-                )}
+                <button className="text-white w-full h-10 font-semibold flex justify-center
+                items-center bg-blue-500 p-3 rounded-md cursor-pointer">Continue</button>
+            </form>
+            <p className="mt-2 text-gray-500 text-center">or sign up with</p>
+            <div className="flex justify-center gap-2">
+                <form
+                action={async () => {
+                    "use server"
+                    await signIn();
+                }}
+                >
+                    <button type="submit" className="w-12 h-12 cursor-pointer flex justify-center items-center rounded-md shadow-lg">
+                        <FcGoogle className="text-4xl" />                
+                    </button>
+                </form>
+                <form
+                action={async () => {
+                    "use server"
+                    await signIn();
+                }}
+                >
+                    <button type="submit" className="w-12 h-12 cursor-pointer flex justify-center items-center rounded-md shadow-lg"> 
+                        <FaGithub className="text-4xl"/>
+                     </button>
+                </form>
             </div>
-        </mian> 
-         
-
+        </div>
+        </main>
     )
 }
