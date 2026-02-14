@@ -2,12 +2,14 @@ import { TextField, textField} from "@mui/material"
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { auth, signIn } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function Login() {
     const session = await auth ();
-    console.log(session);
-
-
+    if (session) {
+        redirect ("/dashborad/enroll");
+    }
+    
     return (
         <main className="min-h-screen flex justify-center py-6 px-2">
         <div className="w-full shadow-md rounded md:w-94 md:flex md:flex-col md:gap-3

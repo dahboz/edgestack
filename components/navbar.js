@@ -14,10 +14,10 @@ export function Navbar () {
             <div className="h-15 flex justify-between items-center px-5">
                 <h1 className="text-3xl font-bold text-blue-500">Edgestack</h1>
                 <ul className="hidden md:flex gap-8 text-sm font-semibold">
-                    <Link href="/app/page.js"><li>Home</li></Link>
-                    <li>Enroll</li>
-                    <li>student-list</li>
-                    <li>profile</li>
+                    <Link href="/"><li>Home</li></Link>
+                    <Link href="/dashboard/enroll"><li>Enroll</li></Link>
+                    <Link href="/dashboard/student-list"><li>student-list</li></Link>
+                    <Link href="/dashboard/profile"><li>profile</li></Link>
                 </ul>
                 <Link href="/auth/login">
                 <div className="hidden w-20 md:h-10 md:rounded md:shadow md:text-white md:flex justify-center items-center bg-blue-500">
