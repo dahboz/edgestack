@@ -1,5 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Footer } from "@/components/footer";
+import { Navbar } from "@/components/navbar";
+import  {SessionProvider} from "next-auth/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "edgestack",
-  description: "online registration app",
+  title: "Edgestack",
+  description: "Online Registration App",
 };
 
 export default function RootLayout({ children }) {
@@ -22,7 +25,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Navbar/>
+        <SessionProvider>
         {children}
+        </SessionProvider>
+        <Footer/>
       </body>
     </html>
   );

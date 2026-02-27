@@ -1,14 +1,11 @@
- "use client"
+  "use client"
 import { db } from "@/config/firebase.config";
-import { Button, Card, CardContent, CardHeader, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormGroup, 
-InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, Card, CardContent, CardHeader, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { addDoc, collection } from "firebase/firestore";
 import { useFormik } from "formik";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import * as yup from "yup";
-Button
-
 
 const schema = yup.object().shape({
     fullName: yup.string().required("Full Name is required"),
@@ -17,14 +14,14 @@ const schema = yup.object().shape({
     examDate: yup.date().required("Exam date is required"),
     subject: yup.array().min(1, "Atleast one subject must be selected").required(),
  })
- const mySubject = ["English","Mathematics","Biology","Chemistry", "Physics"];
+ const mySubject = ["English","Mathematics","Biology","Chemistry", "Physics", "Further Mathematics", "Literature", "Government", "Economics", "Accounting", "Commerce", "Agric Science", "Geography", "History"];
  
 export default function Enroll () {
     const [loading, setLoading] = useState(false);
-    const [open, setOpen] =useState ();
-    const {data: session} = useSession ();
-    console.log(session);
+    const [open, setOpen] = useState(false);
+    const {data : session} = useSession();
     
+    const handleClose = ()=> setOpen(false) 
      const {handleChange, handleSubmit,touched,errors,values,setFieldValue } = useFormik({
         initialValues: {
             fullName: "",
@@ -34,26 +31,26 @@ export default function Enroll () {
             subject: [],
         },
         onSubmit: async(values, {resetForm})=>{
-            try {
-                  setLoading(true)
-                 await addDoc(collection(db, "enrollments"), {
+              try {
+                   setLoading(true);
+                  await addDoc(collection(db,"enrollments"),{
                     user: session?.user?.id,
                     fullName: values.fullName,
                     phoneNumber: values.phone,
                     examType: values.examType,
                     examDate: values.examDate,
-                    selectedSubject: values.subject,
-                    timeCreated: new Date(),
-                 })
-                 alert("student enrolled successfully");
-                 resetForm();
-                 setLoading(false)
-            }
-            catch (errors) {
-                console.error("Error submitting form:", errors);
-                alert("failed to enroll student. please try again.")
-                
-            }
+                    selectedSubjects: values.subject,
+                    timecreated: new Date(), 
+                  })
+                  setOpen(true)
+                  resetForm();
+                  setLoading(false);
+              }
+              catch(error) {
+                console.error("Error submitting form:", error);
+                alert("Failed to enroll student. Please try again.");
+                setLoading(false);
+              }
         }, 
         validationSchema: schema,
 
@@ -83,7 +80,7 @@ export default function Enroll () {
                                placeholder="Enter Full Name"
                                size="small"
                               />
-                              {touched.fullName && errors.fullName? <span className="text-red-500 text-xs">{errors.fullName} </span>:null}
+                              {touched.fullName && errors.fullName ? <span className="text-red-500 text-xs">{errors.fullName}</span> : null}
                           </div>
                           <div>
                              <TextField
@@ -96,7 +93,7 @@ export default function Enroll () {
                               placeholder="08077....."
                               size="small"
                              />
-                              {touched.phone && errors.phone? <span className="text-red-500 text-xs">{errors.phone} </span>:null}
+                             {touched.phone && errors.phone ? <span className="text-red-500 text-xs">{errors.phone}</span> : null}
                           </div>
                           <FormControl>
                              <InputLabel id="examType-label">Exam Type</InputLabel>
@@ -113,7 +110,7 @@ export default function Enroll () {
                                  <MenuItem value="Waec" >Waec</MenuItem>
                                  <MenuItem value="Neco">Neco</MenuItem>
                              </Select>
-                              {touched.examType && errors.examType? <span className="text-red-500 text-xs">{errors.examType} </span>: null}
+                             {touched.examType && errors.examType ? <span className="text-red-500 text-xs">{errors.examType}</span> : null}
                           </FormControl>
                           <div>
                             <TextField
@@ -127,30 +124,42 @@ export default function Enroll () {
                              size="small"
                              InputLabelProps={{shrink: true}}
                             />
-                             {touched.examDate && errors.examDate? <span className="text-red-500 text-xs">{errors.examDate} </span>: null}
+                            {touched.examDate && errors.examDate ? <span className="text-red-500 text-xs">{errors.examDate}</span> : null}
                           </div>
                           <p className="mt-2 text-gray-600 text-center">Select Subjects</p>
                           <FormGroup sx={{
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr"
+                             display: "grid",
+                             gridTemplateColumns: "1fr 1fr"
                           }}> 
                             {mySubject.map(subj =>
                              <FormControlLabel
-                              key={subj} 
+                              key={subj}
                               control={
-                              <Checkbox checked={values.subject.includes(subj)}
-                               onChange={()=>handleSubjectChange(subj)}/>}  
-                              label={subj} />
+                               <Checkbox 
+                               checked={values.subject.includes(subj)} 
+                               onChange={()=>handleSubjectChange(subj)}/>} 
+                              label={subj} 
+                              />
+                              
                              )}
-                              {touched.subject && errors.subject? <span className="text-red-500 text-xs">{errors.subject} </span>: null}
+                             {touched.subject && errors.subject ? <span className="text-red-500 text-xs">{errors.subject}</span> : null}
                           </FormGroup>
-                          <button type="submit" className="w-full h-9 cursor-pointer rounded 
-                          bg-blue-500 font-semibold text-white">
-                           {loading? "Enrolling...": "Enroll"}
+                          <button type="submit" className="w-full h-9 cursor-pointer rounded bg-blue-500 font-semibold text-white">
+                            {loading ? "Enrolling..." : "Enroll"}
                             </button>
                        </form>
                  </CardContent>
             </Card>
+
+            <Dialog open={open} onClose={handleClose} >
+                <DialogTitle>Success</DialogTitle>
+                <DialogContent>
+                    <Typography>Student enrolled succesfully</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} variant="contained" color="primary">Close</Button>
+                </DialogActions>
+            </Dialog>
         </main>
     )
 }
