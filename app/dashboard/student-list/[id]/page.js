@@ -21,11 +21,11 @@ export default function Student() {
     if (!session?.user) { 
         router.push("/auth/login");  
     };
-
+                                                                                                                                               
     //fetch student from the database
     useEffect(()=>{
         const fetchStudent =async () =>{
-        try {
+        try {                            
           
             const StudeentRef = doc(db, "enrollments",id);
             const snapShot = await getDoc (StudeentRef);
